@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.zykt.mapper.BookMapper">
+
+    <!--查询当前类别下的书籍-->
+    <select id="selBookByClassifyId" parameterType="int" resultType="Book">
+       select Bo.* from zykt_book as Bo,zykt_classify as Cl WHERE Bo.classify_id = Cl.id and Cl.id = #{id} order by collection_number DESC
+    </select>
+
+    <!--关键字查找书籍信息-->
+    <select id="selBookByKeyword" parameterType="String" resultType="Book">
+        select Bo.* from zykt_book as Bo where 1=1
+        <if test="keyword!=null and keyword != '' ">
+            and Bo.keyword like '%${keyword}%'
+        </if>
+        order by collection_number DESC
+    </select>
+
+    <!--查找用户收藏的书籍-->
+    <select id="selBookByUserId" parameterType="String" resultType="Book">
+        select * from zykt_book where id in(select book_id from zykt_collection where user_id = #{userId})
+    </select>
+
+    <!-- 查询所有书籍状态 -->
+    <select id="selBookByStatus" parameterType="int" resultMap="BookAndClassify">
+        select Bo.id AS 'Bo.id',Bo.name AS 'Bo.name',publish_time,edition,author,publisher,image_url,describes,ranges,icon,icon_back  from zykt_book as Bo,zykt_classify as Cl where status = 0 and Cl.id = Bo.classify_id  order by insert_time DESC
+    </select>
+
+    <!--查找推荐书籍-->
+    <select id="selBookByNumber" resultMap="BookAndClassify">
+        select Bo.id AS 'Bo.id',Bo.name AS 'Bo.name',publish_time,edition,author,publisher,image_url,collection_number,describes,ranges,icon,icon_back from zykt_book as Bo,zykt_classify as Cl where Cl.id = Bo.classify_id order by collection_number DESC
+    </select>
+
+    <!--联合查询返回类型-->
+    <resultMap id="BookAndClassify" type="Book">
+        <id property="id" column="Bo.id"/>
+        <result property="name" column="Bo.name"/>
+        <result property="author" column="author"/>
+        <result property="edition" column="edition"/>
+        <result property="publisher" column="publisher"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="collectionNumber" column="collection_number"/>
+        <result property="publishTime" column="publish_time"/>
+        <result property="describes" column="describes"/>
+        <result property="ranges" column="ranges"/>
+        <collection property="classify" ofType="Classify">
+            <result property="icon" column="icon"/>
+            <result property="iconBack" column="icon_back"/>
+        </collection>
+    </resultMap>
+
+    <!--上传书籍-->
+    <insert id="insBook" parameterType="Book">
+        insert  into zykt_book values (#{id},#{name},#{author},#{publisher},#{edition},#{publishTime},#{keyword},#{imageUrl} ,default ,default ,#{status},#{classifyId},#{describes},#{ranges})
+    </insert>
+
+    <!--访问量加 + 1 -->
+    <update id="addCollectionByBookId" parameterType="String">
+         update zykt_book set collection_number = (collection_number + 1) where id = #{id}
+    </update>
+</mapper>

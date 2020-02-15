@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.zykt.mapper.CategoryMapper">
+
+    <!--查询当前系列课程的各个类别-->
+    <select id="selCategoryBySeriesId" parameterType="int" resultType="Category">
+      select Ca.* from zykt_category as Ca,zykt_series as Se where Ca.series_id = Se.id and Se.id = #{id}
+    </select>
+
+    <!--查询全部课程的各个类别-->
+    <select id="selCategory" resultType="Category">
+      select Ca.* from zykt_category as Ca
+    </select>
+</mapper>

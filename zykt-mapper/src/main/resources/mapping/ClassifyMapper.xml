@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.zykt.mapper.ClassifyMapper">
+
+    <!--查询出当前类别下的分类科目-->
+    <select id="selClassifyByCateId" parameterType="int" resultType="Classify">
+       select Cl.* from zykt_category as Ca,zykt_classify as Cl where Cl.category_id=Ca.id and Ca.id = #{id}
+    </select>
+
+    <select id="selClassifyUse" resultType="Classify">
+        select * from zykt_classify as CL where status = 1
+    </select>
+</mapper>

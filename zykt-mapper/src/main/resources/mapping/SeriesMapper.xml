@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.zykt.mapper.SeriesMapper">
+
+    <!--查询系列分类信息-->
+    <select id="selSeries" resultType="Series">
+        select *  from zykt_series
+    </select>
+
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wd.zykt.mapper.HotwordMapper">
+
+    <!--返回前 15 的热搜词 -->
+    <select id="selHotWord" resultType="String">
+        select hotword from zykt_hotword group by hotword order by COUNT(hotword) desc LIMIT 15
+    </select>
+
+    <!-- 新增热搜词 -->
+    <insert id="insHotWord" parameterType="String">
+        insert into zykt_hotword VALUES (default,#{hotword})
+    </insert>
+</mapper>
